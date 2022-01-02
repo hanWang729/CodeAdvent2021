@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 
 const int vectorSize = 5;
 
@@ -91,16 +92,69 @@ struct InputVector {
     }
 };
 
+std::vector<InputVector> readInput(){
+    std::vector<InputVector> returnValue;
+    std::ifstream file("data/day4.txt");
+    std::vector<std::vector<int>> templateVector = {{0,0,0,0,0},
+                                    {0,0,0,0,0},
+                                    {0,0,0,0,0},
+                                    {0,0,0,0,0},
+                                    {0,0,0,0,0}};
+    int i = 0, j = 0;
+    while(!file.eof()){
+        
+        file >> templateVector[i][j++];
+        if(j == vectorSize){
+            i++;
+            if(i == vectorSize){
+                i = 0;
+                returnValue.push_back(InputVector(templateVector));
+                templateVector = {{0,0,0,0,0},
+                                    {0,0,0,0,0},
+                                    {0,0,0,0,0},
+                                    {0,0,0,0,0},
+                                    {0,0,0,0,0}};
+            }
+            j = 0;
+        }      
+    }
+    return returnValue;
+}
+
+void part1(std::vector<int> puzzleInput){
+    int steps = 99;
+    int finalAnswer = 0;
+    auto inputVectors = readInput();
+    for(auto v : inputVectors){
+        v.findAnswer(puzzleInput);
+        if(v.steps < steps){
+            steps = v.steps;
+            finalAnswer = v.finalAnswer;
+        }
+    }
+    std::cout << "Part 1: " << finalAnswer << std::endl;
+}
+
+void part2(std::vector<int> puzzleInput){
+    int steps = 0;
+    int finalAnswer = 0;
+    auto inputVectors = readInput();
+    for(auto v : inputVectors){
+        v.findAnswer(puzzleInput);
+        if(v.steps > steps){
+            steps = v.steps;
+            finalAnswer = v.finalAnswer;
+        }
+    }
+    std::cout << "Part 2: " << finalAnswer << std::endl;
+}
+
 int main(int argc, char * argv[]) {
-    std::vector<int> puzzleInput = {7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1};
-    std::vector<std::vector<int>> testVector = {{14,21,17,24,4},
-                                    {10,16,15,9,19},
-                                    {18,8,23,26,20},
-                                    {22,11,13,6,5},
-                                    {2,0,12,3,7}};
-    auto inputVector = InputVector(testVector);
+    std::vector<int> puzzleInput = {83,5,71,61,88,55,95,6,0,97,20,16,27,7,79,25,81,29,22,52,43,21,53,59,99,18,35,96,51,93,14,
+                                    77,15,3,57,28,58,17,50,32,74,63,76,84,65,9,62,67,48,12,8,68,31,19,36,85,98,30,91,89,66,80,
+                                    75,47,4,23,60,70,87,90,13,38,56,34,46,24,41,92,37,49,73,10,94,26,42,40,33,54,86,82,72,39,2,
+                                    45,78,11,1,44,69,64};
+    part1(puzzleInput);
+    part2(puzzleInput);
     
-    int f = inputVector.findAnswer(puzzleInput);
-    inputVector.printVector();
-    std::cout << "Final num: " << f << " Steps: " << inputVector.steps << std::endl;
 }
