@@ -150,8 +150,8 @@ int part2(){
 
 int main(int argc, char * argv[]){
 
-    // std::cout << "Ans of part1: " << part1() << std::endl;
-    int ans2 = part2();
-    std::cout << "Ans of part2: " << ans2 << std::endl;
+    std::cout << "Ans of part1: " << part1() << std::endl;
+    // int ans2 = part2();
+    // std::cout << "Ans of part2: " << ans2 << std::endl;
     return 0;
 }

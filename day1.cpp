@@ -15,7 +15,7 @@ std::vector<int> readInput()
 int increase_or_not(std::vector<int> const &input){
     
     int count = 0;
-    
+    // for (auto i = input.begin(); i != input.end(); ++i)
     for (int i = 0; i < input.size() - 1; i++) {
         if (input[i] < input[i+1])
             count++;
