@@ -60,7 +60,8 @@ std::vector<Path> readInput(){
     return returnValue;
 }
 
-int main(int argc, char * argv[]) {
+
+int getAns(bool includeDiagonal){
     auto inputPaths = readInput();
     std::map<int, int> answer;
     int key;
@@ -92,6 +93,22 @@ int main(int argc, char * argv[]) {
                 i += p.x_direction;
             }
         }
+        else if(includeDiagonal){
+            int j;
+            i = p.x1;
+            j = p.y1;
+            while(i!=p.x2 + p.x_direction && j!=p.y2 + p.y_direction){
+                key = i * 1000 + j;
+                if(answer.count(key)){
+                    answer[key] += 1;
+                }
+                else{
+                    answer[key] = 1;
+                }
+                i += p.x_direction;
+                j += p.y_direction;
+            }
+        }
     }
     std::map<int,int>::iterator iter;
     int answerCount = 0;
@@ -100,9 +117,15 @@ int main(int argc, char * argv[]) {
         int n = iter -> first;
         if(t > 1){
             answerCount++;
-            std::cout << n << std::endl;
-        }
-            
+        }         
     }
-    std::cout << "Part1: " << answerCount << std::endl;
+    return answerCount;
+}
+
+
+int main(int argc, char * argv[]) {
+    int ans1 = getAns(false);
+    int ans2 = getAns(true);
+    std::cout << "Part1: " << ans1 << std::endl;
+    std::cout << "Part2: " << ans2 << std::endl;
 }
