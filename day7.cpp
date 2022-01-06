@@ -35,28 +35,27 @@ void part1(){
     std::cout << "Ans1: " << ans1 << std::endl;
 }
 
-int order(int a){
-    if (a>0)
-        return a + order(a-1);
-    else
-        return 0;
+long long fuelConsume(std::vector<int>& inputs, int a){
+    long long returnValue = 0;
+    for(auto i : inputs){
+        int length = std::abs(a - i);
+        returnValue += length * (length + 1) / 2;
+    }
+    return returnValue;
 }
 
 void part2(){
     auto inputs = readInput();
-    int sum = std::accumulate(inputs.begin(), inputs.end(),0);
-    int ave = sum / inputs.size();
-    int ans2_1 = 0;
-    for(auto i : inputs){
-        ans2_1 += order(std::abs(i - ave));
+    long long ans2 = fuelConsume(inputs, 0);
+    long long anst;
+    for(int i = 0; i < 1000; i++){
+        anst = fuelConsume(inputs,i);
+        std::cout << i << " " << anst << std::endl;
+        ans2 = std::min(ans2,anst);
     }
-    std::cout << "ave: " << ave << " asw2: " << ans2_1 << std::endl;
+    
+    std::cout << " asw2: " << ans2 << std::endl;
 
-    int ans2_2 = 0;
-    for(auto i : inputs){
-        ans2_2 += order(std::abs(i - ave - 1));
-    }
-    std::cout << "ave: " << ave << " asw2: " << ans2_2 << std::endl;
 }
 
 int main(int argc, char * argv[]) {
