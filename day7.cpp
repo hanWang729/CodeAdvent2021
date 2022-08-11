@@ -50,7 +50,7 @@ void part2(){
     long long anst;
     for(int i = 0; i < 1000; i++){
         anst = fuelConsume(inputs,i);
-        std::cout << i << " " << anst << std::endl;
+        // std::cout << i << " " << anst << std::endl;
         ans2 = std::min(ans2,anst);
     }
     
@@ -59,7 +59,7 @@ void part2(){
 }
 
 int main(int argc, char * argv[]) {
-    // part1();
+    part1();
     // std::cout << order(5) << std::endl;
     part2();
 }
