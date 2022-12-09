@@ -49,64 +49,71 @@ struct InputAction{
 };
 
 struct HeadTail{
-    std::vector<int> head;
-    std::vector<int> tail;
-    std::set<long> tailmap;
+    int size;
+    std::vector<std::vector<int>> knots;
+    std::vector<std::set<long>> knotsmap;
 
-    HeadTail(){
-        head = {0,0};
-        tail = {0,0};
-        recordTail();
+    HeadTail(int n){
+        std::vector<int> knot = {0,0};
+        std::set<long> s;
+        size = n;
+        for(int i = 0; i < n; i++){
+            knots.push_back(knot);
+            knotsmap.push_back(s);
+        }
+        recordKnots();
     }
 
-    void recordTail(){
-        // std::cout << "x: " << tail[0] << ", y: " << tail[1] << std::endl;
-        tailmap.insert(tail[0] * 10000 + tail[1]);
+    void recordKnots(){
+        // std::cout << "x: " << knots[tail][0] << ", y: " << knots[tail][1] << std::endl;
+        for(int i = 0; i < size; i++){
+            knotsmap[i].insert(knots[i][0] * 10000 + knots[i][1]);
+        }
     }
 
-    bool checkTail(){
-        if(std::abs(head[0] - tail[0]) > 1 || std::abs(head[1] - tail[1]) > 1){
+    bool checkTail(int head, int tail){
+        if(std::abs(knots[head][0] - knots[tail][0]) > 1 || std::abs(knots[head][1] - knots[tail][1]) > 1){
             return true; // need move tail
         }
         else
             return false;
     }
 
-    void moveTail(){
-        if(!checkTail()){
+    void moveTail(int head, int tail){
+        if(!checkTail(head, tail)){
             return;
         }
-        if(head[0] == tail[0]){
-            if(head[1] > tail[1]){
-                tail[1]++;
+        if(knots[head][0] == knots[tail][0]){
+            if(knots[head][1] > knots[tail][1]){
+                knots[tail][1]++;
             }
-            else if(head[1] < tail[1]){
-                tail[1]--;
+            else if(knots[head][1] < knots[tail][1]){
+                knots[tail][1]--;
             }
         }
-        else if(head[1] == tail[1]){
-            if(head[0] > tail[0]){
-                tail[0]++;
+        else if(knots[head][1] == knots[tail][1]){
+            if(knots[head][0] > knots[tail][0]){
+                knots[tail][0]++;
             }
-            else if(head[0] < tail[0]){
-                tail[0]--;
+            else if(knots[head][0] < knots[tail][0]){
+                knots[tail][0]--;
             }
         }
         else{
-            if(head[0] > tail[0]){
-                tail[0]++;
+            if(knots[head][0] > knots[tail][0]){
+                knots[tail][0]++;
             }
-            else if(head[0] < tail[0]){
-                tail[0]--;
+            else if(knots[head][0] < knots[tail][0]){
+                knots[tail][0]--;
             }
-            if(head[1] > tail[1]){
-                tail[1]++;
+            if(knots[head][1] > knots[tail][1]){
+                knots[tail][1]++;
             }
-            else if(head[1] < tail[1]){
-                tail[1]--;
+            else if(knots[head][1] < knots[tail][1]){
+                knots[tail][1]--;
             }
         }
-        recordTail();
+        recordKnots();
     }
 };
 
@@ -129,13 +136,15 @@ std::vector<InputAction> readInput()
 
 int main(int argc, char * argv[]){
     auto input = readInput();
-    HeadTail myHeadTail;
+    HeadTail myHeadTail(10);
     for(auto action:input){
         for(int i = 0; i < action.distance; i++){
-            action.doAction(myHeadTail.head[0],myHeadTail.head[1]);
-            // std::cout << "x: " << myHeadTail.head[0] << ", y: " << myHeadTail.head[1] << std::endl;
-            myHeadTail.moveTail();
+            int head = 0;
+            action.doAction(myHeadTail.knots[head][0],myHeadTail.knots[head][1]);
+            // std::cout << "x: " << myHeadTail.knots[head][0] << ", y: " << myHeadTail.knots[head][1] << std::endl;
+            for(head = 0; head < myHeadTail.size - 1; head++)
+            myHeadTail.moveTail(head, head+1);
         }
     }
-    std::cout << myHeadTail.tailmap.size() << std::endl;
+    std::cout << myHeadTail.knotsmap[9].size() << std::endl;
 }
