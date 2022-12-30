@@ -14,6 +14,15 @@ int EXAMPLE = 0;
 
 int MOD = 1000;
 
+bool part2 = true;
+
+enum Direction{
+    Right,
+    Up,
+    Left,
+    Down,
+};
+
 int hash(int x, int y){
     return x * MOD + y;
 }
@@ -21,6 +30,37 @@ int hash(int x, int y){
 void dehash(int h, int &x, int &y){
     x = h / MOD;
     y = h % MOD;
+}
+
+int hash1(int x, int y, Direction d){
+    int di;
+    if(d == Right)
+        di = 0;
+    else if(d == Up)
+        di = 1;
+    else if(d == Left)
+        di = 2;
+    else if(d == Down)
+        di = 3;
+
+    return x * MOD + y + di * MOD * MOD;
+}
+
+void dehash1(int h, int &x, int &y, Direction & d){
+    int di = h / MOD / MOD;
+    x = (h - di * MOD * MOD) / MOD;
+    y = h % MOD;
+    
+    if(di == 0)
+        d = Right;
+    else if(di == 1)
+        d = Up;
+    else if(di == 2)
+        d = Left;
+    else if(di == 3)
+        d = Down;
+    else
+        std::cout << "Error" << std::endl;
 }
 
 void test_hash(){
@@ -31,12 +71,16 @@ void test_hash(){
     std::cout << "h: " << h << ", x: " << x << ", y: " << y << std::endl;
 }
 
-enum Direction{
-    Right,
-    Down,
-    Left,
-    Up,
-};
+void test_hash1(){
+    int x = 0;
+    int y = 5;
+    Direction d = Down;
+    int h = hash1(x,y,d);
+    dehash1(h,x,y,d);
+    std::cout << "h: " << h << ", x: " << x << ", y: " << y << ", d: " << d << std::endl;
+}
+
+
 
 struct Map22{
     std::set<int> walls;
@@ -46,6 +90,7 @@ struct Map22{
 
     std::map<int, int> border_horizontal;
     std::map<int, int> border_vertical;
+    std::map<int, int> border_2;
 
     int start;
     Map22(){};
@@ -66,30 +111,37 @@ struct Map22{
                 column = inputVector[i].size();
         }
         start = *tiles.begin();
+        if(part2)
+            border2();
+        else
+            border1();
+    }
+        
+    void border1(){
         for(int i = 0; i < row; i++){
-            int left_border, right_border;
-            int j=0;
-            while(true){
-                if(walls.count(hash(i,j)) == 1 || tiles.count(hash(i,j)) == 1){
-                    left_border = j;
-                    break;
-                }
-                else{
-                    j++;
-                }
+        int left_border, right_border;
+        int j=0;
+        while(true){
+            if(walls.count(hash(i,j)) == 1 || tiles.count(hash(i,j)) == 1){
+                left_border = j;
+                break;
             }
-            j = 200;
-            while(true){
-                if(walls.count(hash(i,j)) == 1 || tiles.count(hash(i,j)) == 1){
-                    right_border = j;
-                    break;
-                }
-                else{
-                    j--;
-                }
+            else{
+                j++;
             }
-            border_horizontal.insert(std::make_pair(hash(i,left_border), hash(i,right_border)));
-            border_horizontal.insert(std::make_pair(hash(i,right_border), hash(i,left_border)));
+        }
+        j = 200;
+        while(true){
+            if(walls.count(hash(i,j)) == 1 || tiles.count(hash(i,j)) == 1){
+                right_border = j;
+                break;
+            }
+            else{
+                j--;
+            }
+        }
+        border_horizontal.insert(std::make_pair(hash(i,left_border), hash(i,right_border)));
+        border_horizontal.insert(std::make_pair(hash(i,right_border), hash(i,left_border)));
         }
         for(int j = 0; j < column; j++){
             int up_border, down_border;
@@ -115,6 +167,37 @@ struct Map22{
             }
             border_vertical.insert(std::make_pair(hash(up_border,j), hash(down_border,j)));
             border_vertical.insert(std::make_pair(hash(down_border,j), hash(up_border,j)));
+        }
+    }
+
+    void border2(){
+        for(int i = 100; i < 150; i++){
+            border_2.insert(std::make_pair(hash1(49,i,Down),hash1(i-50,99,Left)));
+            border_2.insert(std::make_pair(hash1(i-50,99,Right), hash1(49,i,Up)));
+        }
+        for(int i = 0; i < 50; i++){
+            border_2.insert(std::make_pair(hash1(100,i,Up), hash1(i+50,50,Right)));
+            border_2.insert(std::make_pair(hash1(i+50,50,Left), hash1(100,i,Down)));
+        }
+        for(int i = 50; i < 100; i++){
+            border_2.insert(std::make_pair(hash1(149,i,Down), hash1(i+100,49,Left)));
+            border_2.insert(std::make_pair(hash1(i+100,49,Right), hash1(149,i,Up)));
+        }
+        for(int i = 50; i < 100; i++){
+            border_2.insert(std::make_pair(hash1(0,i,Up), hash1(i+100,0,Right)));
+            border_2.insert(std::make_pair(hash1(i+100,0,Left), hash1(0,i,Down)));
+        }
+        for(int i = 100; i < 150; i++){
+            border_2.insert(std::make_pair(hash1(0,i,Up), hash1(199,i-100,Up)));
+            border_2.insert(std::make_pair(hash1(199,i-100,Down), hash1(0,i,Down)));
+        }
+        for(int i = 0; i < 50; i++){
+            border_2.insert(std::make_pair(hash1(i,149,Right), hash1(149-i,99,Left)));
+            border_2.insert(std::make_pair(hash1(149-i,99,Right), hash1(i,149,Left)));
+        }
+        for(int i = 0; i < 50; i++){
+            border_2.insert(std::make_pair(hash1(i,50,Left), hash1(149-i,0,Right)));
+            border_2.insert(std::make_pair(hash1(149-i,0,Left), hash1(i,50,Right)));
         }
     }
 
@@ -205,17 +288,25 @@ struct NPC{
             return stop;
         }
         else{
-            if(d == Left || d == Right){
-                dehash(myMap.border_horizontal[hash(row,column)],nrow,ncol);
-                // std::cout << "h: " << row << ", " << column << " : " << nrow << ", " << ncol << std::endl;
+            Direction nd;
+            if(part2){ 
+                dehash1(myMap.border_2[hash1(row,column,d)],nrow,ncol,nd);
+                std::cout << "v: " << row << ", " << column << ", " << d << " : " << nrow << ", " << ncol  << ", " << nd << std::endl;
+
             }
             else{
-                dehash(myMap.border_vertical[hash(row,column)],nrow,ncol);
-                // std::cout << "v: " << row << ", " << column << " : " << nrow << ", " << ncol << std::endl;
+                if(d == Left || d == Right){
+                    dehash(myMap.border_horizontal[hash(row,column)],nrow,ncol);
+                }
+                else{
+                    dehash(myMap.border_vertical[hash(row,column)],nrow,ncol);
+                }
             }
             if(myMap.tiles.count(hash(nrow,ncol)) == 1){
-            row = nrow;
-            column = ncol;
+                row = nrow;
+                column = ncol;
+                if(part2)
+                    d = nd;
             }
             else if(myMap.walls.count(hash(nrow,ncol)) == 1){
                 stop = true;
@@ -324,4 +415,5 @@ void part1(){
 
 int main(int argc, char* argv[]){
     part1();
+    // test_hash1();
 }
