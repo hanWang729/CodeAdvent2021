@@ -1,4 +1,4 @@
-output/day2: day2.cpp /usr/include/stdc-predef.h \
+output/day3: day3.cpp /usr/include/stdc-predef.h \
  /usr/include/c++/9/iostream \
  /usr/include/x86_64-linux-gnu/c++/9/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/9/bits/os_defines.h \
@@ -147,25 +147,28 @@ output/day2: day2.cpp /usr/include/stdc-predef.h \
  /usr/include/c++/9/bits/stl_vector.h \
  /usr/include/c++/9/bits/stl_bvector.h /usr/include/c++/9/bits/vector.tcc \
  /usr/include/c++/9/iterator /usr/include/c++/9/bits/stream_iterator.h \
+ /usr/include/c++/9/cstring /usr/include/string.h /usr/include/strings.h \
  /usr/include/c++/9/numeric /usr/include/c++/9/bits/stl_numeric.h \
  /usr/include/c++/9/pstl/glue_numeric_defs.h \
- /usr/include/c++/9/pstl/execution_defs.h /usr/include/c++/9/algorithm \
- /usr/include/c++/9/bits/stl_algo.h \
- /usr/include/c++/9/bits/algorithmfwd.h \
- /usr/include/c++/9/bits/stl_heap.h /usr/include/c++/9/bits/stl_tempbuf.h \
- /usr/include/c++/9/bits/uniform_int_dist.h \
- /usr/include/c++/9/pstl/glue_algorithm_defs.h \
- /usr/include/c++/9/functional /usr/include/c++/9/tuple \
- /usr/include/c++/9/array /usr/include/c++/9/bits/uses_allocator.h \
- /usr/include/c++/9/bits/invoke.h /usr/include/c++/9/bits/refwrap.h \
- /usr/include/c++/9/bits/std_function.h /usr/include/c++/9/unordered_map \
- /usr/include/c++/9/ext/aligned_buffer.h \
- /usr/include/c++/9/bits/hashtable.h \
- /usr/include/c++/9/bits/hashtable_policy.h \
- /usr/include/c++/9/bits/node_handle.h /usr/include/c++/9/optional \
- /usr/include/c++/9/bits/enable_special_members.h \
- /usr/include/c++/9/bits/unordered_map.h \
- /usr/include/c++/9/bits/erase_if.h /usr/include/c++/9/map \
- /usr/include/c++/9/bits/stl_tree.h /usr/include/c++/9/bits/stl_map.h \
- /usr/include/c++/9/bits/stl_multimap.h /usr/include/c++/9/sstream \
- /usr/include/c++/9/bits/sstream.tcc
+ /usr/include/c++/9/pstl/execution_defs.h /usr/include/c++/9/cmath \
+ /usr/include/math.h /usr/include/x86_64-linux-gnu/bits/math-vector.h \
+ /usr/include/x86_64-linux-gnu/bits/libm-simd-decl-stubs.h \
+ /usr/include/x86_64-linux-gnu/bits/flt-eval-method.h \
+ /usr/include/x86_64-linux-gnu/bits/fp-logb.h \
+ /usr/include/x86_64-linux-gnu/bits/fp-fast.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-helper-functions.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls.h \
+ /usr/include/x86_64-linux-gnu/bits/mathcalls-narrow.h \
+ /usr/include/x86_64-linux-gnu/bits/iscanonical.h \
+ /usr/include/c++/9/bits/specfun.h /usr/include/c++/9/tr1/gamma.tcc \
+ /usr/include/c++/9/tr1/special_function_util.h \
+ /usr/include/c++/9/tr1/bessel_function.tcc \
+ /usr/include/c++/9/tr1/beta_function.tcc \
+ /usr/include/c++/9/tr1/ell_integral.tcc \
+ /usr/include/c++/9/tr1/exp_integral.tcc \
+ /usr/include/c++/9/tr1/hypergeometric.tcc \
+ /usr/include/c++/9/tr1/legendre_function.tcc \
+ /usr/include/c++/9/tr1/modified_bessel_func.tcc \
+ /usr/include/c++/9/tr1/poly_hermite.tcc \
+ /usr/include/c++/9/tr1/poly_laguerre.tcc \
+ /usr/include/c++/9/tr1/riemann_zeta.tcc

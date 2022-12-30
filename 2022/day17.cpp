@@ -163,7 +163,7 @@ struct Map
         std::vector<Step>::iterator it;
         it = actions.steps.begin();
         Step s;
-        for(int r = 1; r <= 2022; r++){
+        for(int r = 1; r <= 1730+1190; r++){
             rock = rocks(r);
             while(!stop){
                 s = *it;

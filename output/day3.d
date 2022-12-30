@@ -1,4 +1,4 @@
-output/day2: day2.cpp /usr/include/stdc-predef.h \
+output/day3: day3.cpp /usr/include/stdc-predef.h \
  /usr/include/c++/9/iostream \
  /usr/include/x86_64-linux-gnu/c++/9/bits/c++config.h \
  /usr/include/x86_64-linux-gnu/c++/9/bits/os_defines.h \
@@ -165,7 +165,6 @@ output/day2: day2.cpp /usr/include/stdc-predef.h \
  /usr/include/c++/9/bits/node_handle.h /usr/include/c++/9/optional \
  /usr/include/c++/9/bits/enable_special_members.h \
  /usr/include/c++/9/bits/unordered_map.h \
- /usr/include/c++/9/bits/erase_if.h /usr/include/c++/9/map \
- /usr/include/c++/9/bits/stl_tree.h /usr/include/c++/9/bits/stl_map.h \
- /usr/include/c++/9/bits/stl_multimap.h /usr/include/c++/9/sstream \
- /usr/include/c++/9/bits/sstream.tcc
+ /usr/include/c++/9/bits/erase_if.h /usr/include/c++/9/set \
+ /usr/include/c++/9/bits/stl_tree.h /usr/include/c++/9/bits/stl_set.h \
+ /usr/include/c++/9/bits/stl_multiset.h

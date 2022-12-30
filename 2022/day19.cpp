@@ -11,7 +11,7 @@
 #include <map>
 
 enum Resource{
-    Ore,
+    Ore=0,
     Clay,
     Obsidian,
     Geode,
@@ -29,11 +29,10 @@ struct Robot{
         price = p;
     }
 
-    bool affordable(std::map<Resource, int> stock){
-        for(auto s : stock){
-            if(price.count(s.first) != 0){
-                if(s.second < price[s.first])
-                    return false;
+    bool affordable(std::map<Resource, int>& stock){
+        for(auto& p : price){
+            if(stock[p.first] < p.second){
+                return false;
             }
         }
         return true;
@@ -43,21 +42,78 @@ struct Robot{
 struct Blueprint
 {
     std::map<Resource, Robot> price_table;
-    std::map<Resource, int> robot;
-    std::map<Resource, int> stock;
+    std::map<Resource, int> robot_initial;
+    std::map<Resource, int> stock_initial;
+    std::map<int,int> max_geode;
 
     Blueprint(std::vector<Robot> const& robot_price_vector){
         for(auto r:robot_price_vector){
             price_table[r.type] = r;
         }
-        robot[Ore] = 1;
-        robot[Clay] = 0;
-        robot[Obsidian] = 0;
-        robot[Geode] = 0;
-        stock[Ore] = 0;
-        stock[Clay] = 0;
-        stock[Obsidian] = 0;
-        stock[Geode] = 0;
+        robot_initial[Ore] = 1;
+        robot_initial[Clay] = 0;
+        robot_initial[Obsidian] = 0;
+        robot_initial[Geode] = 0;
+        stock_initial[Ore] = 0;
+        stock_initial[Clay] = 0;
+        stock_initial[Obsidian] = 0;
+        stock_initial[Geode] = 0;
+        for(int i = 0; i <= 24; i++){
+            max_geode[i] = 0;
+        }
+    }
+
+    int find_quality(int min, std::map<Resource, int> robot, std::map<Resource, int> stock){
+        if(min > 11)
+            std::cout << "min: " << min << std::endl;
+        int ans;
+        if(min == 0){
+            ans = stock[Geode];
+            if(max_geode[min] < ans)
+                max_geode[min] = ans;
+            return ans;
+        }
+        
+        std::vector<Resource> affordable_robot;
+        std::vector<int> answers;
+        for(auto &p : price_table){
+            if(p.second.affordable(stock)){
+                affordable_robot.push_back(p.first);
+            }
+        }
+        
+        for(Resource r = Ore; r <= Geode; r = Resource(r+1)){
+            stock[r] += robot[r];
+        }
+
+        if(affordable_robot.size() == 0){
+            ans = find_quality(min - 1, robot, stock);
+            if(max_geode[min] < ans)
+                max_geode[min] = ans;
+            return ans;
+        }
+        else{
+            for(auto& ar : affordable_robot){
+                robot[ar] += 1; 
+                for(auto& p : price_table[ar].price){
+                    stock[p.first] -= p.second;
+                }
+                answers.push_back(find_quality(min - 1, robot, stock));
+            }
+            answers.push_back(find_quality(min - 1, robot, stock));
+            ans = *std::max_element(answers.begin(),answers.end());
+            if(max_geode[min] < ans)
+                max_geode[min] = ans;
+            return ans;
+        }
+    }
+
+    int start(){
+        auto robot = robot_initial;
+        auto stock = stock_initial;
+        int ans = find_quality(24, robot, stock);
+        std::cout << "ans: " << ans << std::endl;
+        return ans;
     }
     
 
@@ -80,7 +136,7 @@ struct Blueprint
 
 std::vector<Blueprint> readInput()
 {
-    std::ifstream input("data/day19.txt");
+    std::ifstream input("data/day19e.txt");
     auto start = std::istream_iterator<int>(input);
     auto end = std::istream_iterator<int>();
     auto s = start;
@@ -137,18 +193,23 @@ std::vector<Blueprint> readInput()
     return blueprintVector;
 }
 
-void test_affordable(){
-    auto blueprints = readInput();
-    for(auto b : blueprints){
-        for(auto p : b.price_table){
-            b.stock[Ore]+=5;
-            b.stock[Clay]+=10;
-            bool t = p.second.affordable(b.stock);
-            std::cout << ResourceString[p.second.type] << ": " << t << std::endl;
-        }
-    }
-}
+// void test_affordable(){
+//     auto blueprints = readInput();
+//     for(auto b : blueprints){
+//         for(auto p : b.price_table){
+//             b.stock[Ore]+=5;
+//             b.stock[Clay]+=10;
+//             bool t = p.second.affordable(b.stock);
+//             std::cout << ResourceString[p.second.type] << ": " << t << std::endl;
+//         }
+//     }
+// }
 
 int main(int argc, char* argv[]){
     auto blueprints = readInput();
+    int ans = 0;
+    for(auto b : blueprints){
+        ans += b.start();
+    }
+    std::cout << "part1: " << ans << std::endl;
 }
