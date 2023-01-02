@@ -41,17 +41,17 @@ struct Elf{
         return (e.position.first == position.first && e.position.second == position.second);
     }
 
-    bool need_move(std::vector<Elf> const& Elves){
+    bool need_move(std::set<std::pair<int,int>> const& old_position){
         for(auto d : ALLDIRECTION){
-            if(std::count(Elves.begin(),Elves.end(),Elf(position + d)) != 0){
+            if(old_position.count(position + d) != 0){
                 return true;
             }
         }
         return false;
     }
     
-    std::pair<int,int> find_new_postion(std::vector<Elf> const& Elves, int const& order){
-        if(!need_move(Elves)){
+    std::pair<int,int> find_new_postion(std::set<std::pair<int,int>> const& old_position, int const& order){
+        if(!need_move(old_position)){
             return position;
         }
         std::vector<std::pair<int,int>> d;
@@ -69,9 +69,9 @@ struct Elf{
                 case 3:
                     d = East;
             }
-            if(std::count(Elves.begin(),Elves.end(),Elf(position + d[0])) == 0 &&
-                std::count(Elves.begin(),Elves.end(),Elf(position + d[1])) == 0 &&
-                std::count(Elves.begin(),Elves.end(),Elf(position + d[2])) == 0){
+            if(old_position.count(position + d[0]) == 0 &&
+                    old_position.count(position + d[1]) == 0 &&
+                    old_position.count(position + d[2]) == 0){
                 return position + d[0];
             }
             d.clear();
@@ -121,21 +121,21 @@ struct Map{
         }
     }
 
-    void move_next_postion(){
+    void move_next_postion(std::set<std::pair<int,int>>const & old_position){
         std::map<int, std::pair<int,int>> next_postion;
         std::set<std::pair<int,int>> uniSet;
         std::set<std::pair<int,int>> dupSet;
         for(int i = 0; i < Elves.size(); i++){
             auto e = Elves[i];
-            auto np = e.find_new_postion(Elves,order);
+            auto np = e.find_new_postion(old_position,order);
             // std::cout << "old: " << e.position.first << "," << e.position.second << ", new: " << np.first << "," << np.second << std::endl;
             if(np != e.position)
                 next_postion[i] = np;
-            if(uniSet.count(next_postion[i]) == 0){
-                uniSet.insert(next_postion[i]);
+            if(uniSet.count(np) == 0){
+                uniSet.insert(np);
             }
             else{
-                dupSet.insert(next_postion[i]);
+                dupSet.insert(np);
             }
         }
         for(auto n : next_postion){
@@ -148,8 +148,12 @@ struct Map{
     void start_part1(){
         while(order < 10){
             bool stop = true;
+            std::set<std::pair<int,int>> old_position;
+            for(int i = 0; i < Elves.size(); i++){
+                old_position.insert(Elves[i].position);
+            }
             for(auto e : Elves){
-                if(e.need_move(Elves)){
+                if(e.need_move(old_position)){
                     stop = false;
                     break;
                 }
@@ -157,7 +161,7 @@ struct Map{
             if(stop){
                 break;
             }
-            move_next_postion();
+            move_next_postion(old_position);
             order++;
         }
         std::cout << "ans1: " << count_ans() << std::endl;
@@ -166,8 +170,12 @@ struct Map{
     void start_part2(){
         while(true){
             bool stop = true;
+            std::set<std::pair<int,int>> old_position;
+            for(int i = 0; i < Elves.size(); i++){
+                old_position.insert(Elves[i].position);
+            }
             for(auto e : Elves){
-                if(e.need_move(Elves)){
+                if(e.need_move(old_position)){
                     stop = false;
                     break;
                 }
@@ -175,9 +183,10 @@ struct Map{
             if(stop){
                 break;
             }
-            move_next_postion();
+            move_next_postion(old_position);
             order++;
-            std::cout << order << std::endl;
+            std::cout << order << ":" << count_ans() << ", " << up << "," << down << "," << left << "," << right << std::endl;
+
         }
         std::cout << "ans1: " << order + 1 << std::endl;
 
